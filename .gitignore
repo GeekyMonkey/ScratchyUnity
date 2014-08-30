@@ -1,0 +1,16 @@
+# Unity3D .gitignore file.
+.DS_Store
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+*.booproj
+*.csproj
+*.dwlt
+*.pidb
+*.sln
+*.suo
+*.unityproj
+*.user
+*.userprefs
+sysinfo.txt
