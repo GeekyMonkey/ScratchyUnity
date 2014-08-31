@@ -3,7 +3,7 @@ using System.Collections;
 
 public delegate void TimerCallback();
 
-public class ScrathyTimer : ScratchyPromise
+public class ScratchyTimer : ScratchyPromise
 {
     public bool Repeat = false;
     public float Elapsed = 0;
@@ -13,12 +13,12 @@ public class ScrathyTimer : ScratchyPromise
 
     private TimerCallback callback;
 
-    public ScrathyTimer()
+    public ScratchyTimer()
     {
         this.Active = false;
     }
 
-    public ScrathyTimer(float duration, bool repeat, TimerCallback callback)
+    public ScratchyTimer(float duration, bool repeat, TimerCallback callback)
     {
         this.Init(duration, repeat, callback);
     }

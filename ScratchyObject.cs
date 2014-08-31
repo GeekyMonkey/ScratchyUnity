@@ -6,11 +6,11 @@ using System.Collections.Generic;
 public class ScratchyObject : MonoBehaviour
 {
     private int TimerLimit = 20;
-    private ScrathyTimer[] Timers;
+    private ScratchyTimer[] Timers;
 
     public ScratchyObject()
     {
-        Timers = new ScrathyTimer[TimerLimit];
+        Timers = new ScratchyTimer[TimerLimit];
     }
 
     // Use this for initialization
@@ -31,7 +31,7 @@ public class ScratchyObject : MonoBehaviour
         // Update any timers
         for (int i = 0; i < Timers.Length; i++ )
         {
-            ScrathyTimer t = Timers[i];
+            ScratchyTimer t = Timers[i];
             if (t != null && t.Active)
             {
                 t.Update(Time.fixedDeltaTime);
@@ -52,31 +52,31 @@ public class ScratchyObject : MonoBehaviour
     {
     }
 
-    public ScrathyTimer Wait(float delay, TimerCallback callback)
+    public ScratchyTimer Wait(float delay, TimerCallback callback)
     {
-        ScrathyTimer timer = GetTimerFromPool();
+        ScratchyTimer timer = GetTimerFromPool();
         timer.Init(delay, false, callback);
         return timer;
     }
 
-    public ScrathyTimer Forever(float every, TimerCallback callback)
+    public ScratchyTimer Forever(float every, TimerCallback callback)
     {
-        ScrathyTimer timer = GetTimerFromPool();
+        ScratchyTimer timer = GetTimerFromPool();
         timer.Init(every, true, callback);
         return timer;
     }
 
-    public ScrathyTimer Repeat(int count, float every, TimerCallback callback)
+    public ScratchyTimer Repeat(int count, float every, TimerCallback callback)
     {
-        ScrathyTimer timer = GetTimerFromPool();
+        ScratchyTimer timer = GetTimerFromPool();
         timer.Init(every, true, callback);
         timer.CountLimit = count;
         return timer;
     }
 
-    private ScrathyTimer GetTimerFromPool()
+    private ScratchyTimer GetTimerFromPool()
     {
-        ScrathyTimer timer = null;
+        ScratchyTimer timer = null;
         int timerIndex = -1;
         for (int i = 0; i < Timers.Length; i++ )
         {
@@ -93,7 +93,7 @@ public class ScratchyObject : MonoBehaviour
         }
         if (timer == null)
         {
-            timer = new ScrathyTimer();
+            timer = new ScratchyTimer();
             this.Timers[timerIndex] = timer;
         }
         return timer;
