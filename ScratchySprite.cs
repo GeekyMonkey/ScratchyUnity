@@ -9,7 +9,7 @@ public class ScratchySprite : ScratchyObject {
 
     protected SpriteRenderer spriteRenderer;
     
-    private int CostumeNumber = -1;
+    private int costumeNumber = -1;
     private int CollisionAccuracy = 1;
 
     internal static Dictionary<Type, List<ScratchySprite>> Instances = new Dictionary<Type, List<ScratchySprite>>();
@@ -77,12 +77,27 @@ public class ScratchySprite : ScratchyObject {
             return;
         }
 
-        CostumeNumber++;
-        if (CostumeNumber >= Costumes.Length)
+        costumeNumber++;
+        if (costumeNumber >= Costumes.Length)
         {
-            CostumeNumber = 0;
+            costumeNumber = 0;
         }
-        SetCostume(CostumeNumber);
+        SetCostume(costumeNumber);
+    }
+
+    /// <summary>
+    /// Gets or sets the costume number
+    /// </summary>
+    public int CostumeNumber
+    {
+        get
+        {
+            return costumeNumber;
+        }
+        set
+        {
+            SetCostume(value);
+        }
     }
 
     /// <summary>
@@ -91,7 +106,7 @@ public class ScratchySprite : ScratchyObject {
     /// <param name="costumeNumber">The costume number (0 based)</param>
     public void SetCostume(int costumeNumber)
     {
-        CostumeNumber = costumeNumber;
+        this.costumeNumber = costumeNumber % this.Costumes.Length;
         var costume = Costumes[CostumeNumber];
         if (costume != null && spriteRenderer != null)
         {
@@ -186,21 +201,6 @@ public class ScratchySprite : ScratchyObject {
     public void Destroy()
     {
         UnityEngine.Object.Destroy(this.gameObject);
-    }
-
-    /// <summary>
-    /// Clone another object at the location of this ScratchySprite
-    /// </summary>
-    /// <param name="prefab">The prefab to instantiate</param>
-    /// <returns>The new cloned object</returns>
-    public object Clone(GameObject prefab)
-    {
-        return Instantiate(prefab, this.transform.position, this.transform.rotation);
-    }
-
-    public static object Clone(GameObject prefab, Vector3 position)
-    {
-        return Instantiate(prefab, position, Quaternion.identity);
     }
 
     /// <summary>

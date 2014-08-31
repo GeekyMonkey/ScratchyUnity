@@ -142,4 +142,21 @@ public class ScratchyObject : MonoBehaviour
         var angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle + angleAdjust);
     }
+
+    /// <summary>
+    /// Clone another object at the location of this ScratchySprite
+    /// </summary>
+    /// <param name="prefab">The prefab to instantiate</param>
+    /// <returns>The new cloned object</returns>
+    public object Clone(GameObject prefab)
+    {
+        return Instantiate(prefab, this.transform.position, this.transform.rotation);
+    }
+
+    public static object Clone(GameObject prefab, Vector3 position)
+    {
+        return Instantiate(prefab, position, Quaternion.identity);
+    }
+
+
 }
