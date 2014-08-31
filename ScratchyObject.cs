@@ -148,15 +148,35 @@ public class ScratchyObject : MonoBehaviour
     /// </summary>
     /// <param name="prefab">The prefab to instantiate</param>
     /// <returns>The new cloned object</returns>
-    public object Clone(GameObject prefab)
+    public ScratchySprite Clone(GameObject prefab)
     {
-        return Instantiate(prefab, this.transform.position, this.transform.rotation);
+        return Clone(prefab, this.transform.position, this.transform.rotation);
     }
 
-    public static object Clone(GameObject prefab, Vector3 position)
+    public static ScratchySprite Clone(GameObject prefab, Vector3 position)
     {
-        return Instantiate(prefab, position, Quaternion.identity);
+        return Clone(prefab, position, Quaternion.identity);
     }
 
+    public static ScratchySprite Clone(GameObject prefab, Vector3 position, Quaternion rotation)
+    {
+        var gameObject = (GameObject)Instantiate(prefab, position, Quaternion.identity);
+        ScratchySprite sprite;
+        try
+        {
+            sprite = gameObject.GetComponent<ScratchySprite>();
+        }
+        catch
+        {
+            sprite = null;
+        }
+
+        if (sprite == null)
+        {
+            throw new Exception("Clone only works for ScratchySprite objects");
+        }
+
+        return sprite;
+    }
 
 }
