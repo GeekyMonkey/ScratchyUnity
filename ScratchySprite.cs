@@ -384,4 +384,9 @@ public class ScratchySprite : ScratchyObject {
             || !cameraBounds.Contains(new Vector3(spriteBounds.max.x, spriteBounds.min.y, 0));
     }
 
+    public void Move(float distance)
+    {
+        // Todo
+    }
+
 }
