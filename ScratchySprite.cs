@@ -3,26 +3,27 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class ScratchySprite : ScratchyObject {
+public class ScratchySprite : ScratchyObject
+{
 
     public Sprite[] Costumes;
 
     protected SpriteRenderer spriteRenderer;
-    
+
     private int costumeNumber = -1;
     private int CollisionAccuracy = 1;
 
     internal static Dictionary<Type, List<ScratchySprite>> Instances = new Dictionary<Type, List<ScratchySprite>>();
 
-	/// <summary>
+    /// <summary>
     /// Initialization
-	/// </summary>
+    /// </summary>
     public override void Start()
     {
         base.Start();
         spriteRenderer = GetComponent<SpriteRenderer>();
         NextCostume();
-	}
+    }
 
     public float Rotate(float degrees)
     {
@@ -179,21 +180,38 @@ public class ScratchySprite : ScratchyObject {
     }
 
     /// <summary>
-    /// Z position in world space
+    /// Z rotation
     /// </summary>
-    public double Rotation
+    public float Rotation
     {
         get
         {
             // todo: not right
-            return this.transform.rotation.z;
+            return this.transform.rotation.eulerAngles.z;
         }
 
         set
         {
-            this.transform.rotation = Quaternion.Euler(0,0,(float)value);
+            this.transform.rotation = Quaternion.Euler(0, 0, value);
         }
     }
+
+    /// <summary>
+    /// Z direction
+    /// </summary>
+    public float Direction
+    {
+        get
+        {
+            return direction.HasValue ? direction.Value : this.Rotation;
+        }
+
+        set
+        {
+            direction = value;
+        }
+    }
+    private float? direction;
 
     /// <summary>
     /// Destroy this ScratchySprite instance
@@ -226,7 +244,7 @@ public class ScratchySprite : ScratchyObject {
     public Bounds GetWorldBounds()
     {
         return this.SpriteRenderer.bounds;
-            
+
         /* The long way -->
         Bounds bounds = this.SpriteRenderer.sprite.bounds;
         Vector3 c1 = this.transform.TransformPoint(bounds.min);
@@ -286,7 +304,7 @@ public class ScratchySprite : ScratchyObject {
         return this.SpriteRenderer.sprite.texture.GetPixel((int)(tr.x + pivotPointOffset.x + objectX), (int)(tr.y + pivotPointOffset.y + objectY));
     }
 
-    public List<T> GetTouchingSprites<T>() where T:ScratchySprite
+    public List<T> GetTouchingSprites<T>() where T : ScratchySprite
     {
         List<T> touching = new List<T>();
         foreach (var sprite in GetSprites<T>())
@@ -348,9 +366,9 @@ public class ScratchySprite : ScratchyObject {
             Bounds otherSpriteBounds = other.SpriteRenderer.sprite.bounds;
             Vector3 pixelWorldPos;
             Color32 c;
-            for (float x = thisSpriteBounds.min.x + 0.5f; x < thisSpriteBounds.max.x && !collision ; x += CollisionAccuracy)
+            for (float x = thisSpriteBounds.min.x + 0.5f; x < thisSpriteBounds.max.x && !collision; x += CollisionAccuracy)
             {
-                for (float y = thisSpriteBounds.min.y + 0.5f; y < thisSpriteBounds.max.y && !collision ; y += CollisionAccuracy)
+                for (float y = thisSpriteBounds.min.y + 0.5f; y < thisSpriteBounds.max.y && !collision; y += CollisionAccuracy)
                 {
                     pixelWorldPos = this.transform.TransformPoint(new Vector3(x, y, 0));
                     if (worldIntersection.Contains(pixelWorldPos))
@@ -384,9 +402,26 @@ public class ScratchySprite : ScratchyObject {
             || !cameraBounds.Contains(new Vector3(spriteBounds.max.x, spriteBounds.min.y, 0));
     }
 
-    public void Move(float distance)
+    /// <summary>
+    /// Move some distance in either the current direction or a given direction
+    /// </summary>
+    /// <param name="distance">Distance to move</param>
+    /// <param name="direction">Direction to move, or null to use the sprites direction or rotation</param>
+    public void Move(float distance, float? direction = null)
     {
-        // Todo
+        float dir;
+        if (direction.HasValue)
+        {
+            dir = direction.Value;
+        }
+        else
+        {
+            dir = this.Direction;
+        }
+
+        var d = Quaternion.Euler(0, 0, dir) * Vector3.up;
+
+        this.transform.Translate(d * distance, Space.World);
     }
 
 }
