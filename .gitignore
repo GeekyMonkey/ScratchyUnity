@@ -14,3 +14,6 @@
 *.user
 *.userprefs
 sysinfo.txt
+
+# Unity Library files to ignore for shared modules
+*.meta
