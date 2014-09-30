@@ -304,6 +304,11 @@ public class ScratchySprite : ScratchyObject
         return this.SpriteRenderer.sprite.texture.GetPixel((int)(tr.x + pivotPointOffset.x + objectX), (int)(tr.y + pivotPointOffset.y + objectY));
     }
 
+    /// <summary>
+    /// Get all of the sprites of a given type that are touching this sprite
+    /// </summary>
+    /// <typeparam name="T">Type of sprite to check</typeparam>
+    /// <returns>List of touching sprites</returns>
     public List<T> GetTouchingSprites<T>() where T : ScratchySprite
     {
         List<T> touching = new List<T>();
@@ -317,6 +322,11 @@ public class ScratchySprite : ScratchyObject
         return touching;
     }
 
+    /// <summary>
+    /// Get a single touching sprite of a given type
+    /// </summary>
+    /// <typeparam name="T">Type of sprite to check</typeparam>
+    /// <returns>The touching sprite object, or null if none are touching</returns>
     public T GetTouchingSprite<T>() where T : ScratchySprite
     {
         foreach (var sprite in GetSprites<T>())
@@ -329,7 +339,12 @@ public class ScratchySprite : ScratchyObject
         return null;
     }
 
-    public bool IsTouchingSprites<T>() where T : ScratchySprite
+    /// <summary>
+    /// Are any sprites of the given type touching this sprite
+    /// </summary>
+    /// <typeparam name="T">The type of sprite to check</typeparam>
+    /// <returns>True if any are touching, otherwise False</returns>
+    public bool IsTouchingAny<T>() where T : ScratchySprite
     {
         foreach (var sprite in GetSprites<T>())
         {
@@ -393,6 +408,10 @@ public class ScratchySprite : ScratchyObject
         return collision;
     }
 
+    /// <summary>
+    /// Is the sprite touching or outside of the camera's view
+    /// </summary>
+    /// <returns>True if any corner of the sprite is outside of the camera's view</returns>
     public bool IsTouchingEdge()
     {
         Bounds cameraBounds = Camera.main.OrthographicBounds();
