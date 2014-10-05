@@ -461,4 +461,73 @@ public class ScratchySprite : ScratchyObject
         this.transform.Translate(d * distance, Space.World);
     }
 
+    /// <summary>
+    /// Convert the sprite's current costume to a collection of quads
+    /// </summary>
+    public List<GameObject> ConvertToPixelQuads(bool addBoxCollider, bool addPhysics, float explosionForce)
+    {
+        Color32 c;
+        List<GameObject> pixels = new List<GameObject>();
+        Bounds thisSpriteBounds = this.SpriteRenderer.sprite.bounds;
+        List<Type> components = new List<Type> { typeof(MeshRenderer), typeof(MeshFilter) };
+        if (addBoxCollider)
+        {
+            components.Add(typeof(BoxCollider2D));
+        }
+        if (addPhysics)
+        {
+            components.Add(typeof(Rigidbody2D));
+        }
+        var componentArray = components.ToArray();
+
+        for (float x = thisSpriteBounds.min.x + 0.5f; x < thisSpriteBounds.max.x; x += CollisionAccuracy)
+        {
+            for (float y = thisSpriteBounds.min.y + 0.5f; y < thisSpriteBounds.max.y; y += CollisionAccuracy)
+            {
+                // Is the pixel transparent, or does it have a color
+                c = GetPixel(x, y);
+                if (c.a > 0.5f)
+                {
+                    // Create a pixel object
+                    float size = -.5f;
+                    Mesh m = new Mesh();
+                    m.name = "PixelMesh";
+                    m.vertices = new[] { new Vector3(-size, -size, 0.01f), new Vector3(size, -size, 0.01f), new Vector3(size, size, 0.01f), new Vector3(-size, size, 0.01f) };
+                    m.uv = new[] { new Vector2(0, 0), new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 0) };
+                    m.triangles = new[] { 0, 1, 2, 0, 2, 3 };
+                    m.RecalculateNormals();
+                    GameObject p = new GameObject("Pixel", componentArray);
+                    p.GetComponent<MeshFilter>().mesh = m;
+                    
+                    // Configure physics
+                    if (addPhysics)  {
+                        p.GetComponent<Rigidbody2D>().gravityScale = 10f;
+                    }
+                    if (addBoxCollider) {
+                        p.GetComponent<BoxCollider2D>().size = Vector2.one;
+                    }
+
+                    // Color the pixel
+                    p.renderer.material.color = c;
+                    p.renderer.material.shader = this.renderer.material.shader;
+
+                    // Position it
+                    p.transform.position = new Vector3(x, y, (float)this.Z);
+                    p.transform.SetParent(this.transform, false);
+                    p.transform.SetParent(null, true);
+
+                    // Add it to the list
+                    pixels.Add(p);
+
+                    // Explode
+                    if (explosionForce > 0) {
+                        p.GetComponent<Rigidbody2D>().AddForceAtPosition(new Vector2(x, y) * explosionForce * UnityEngine.Random.Range(.5f, 2f), Vector2.zero);
+                    }
+                }
+            }
+        }
+
+        return pixels;
+    }
+
 }
