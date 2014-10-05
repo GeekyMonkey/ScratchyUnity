@@ -116,6 +116,24 @@ public class ScratchySprite : ScratchyObject
     }
 
     /// <summary>
+    /// Set the active costume by name
+    /// </summary>
+    /// <param name="costumeName">Name of the costume to use (case sensitive)</param>
+    public void SetCostume(string costumeName)
+    {
+        int costumeCount = this.Costumes.Length;
+        for (int i = 0; i < this.Costumes.Length; i++)
+        {
+            if (this.Costumes[i].name == costumeName)
+            {
+                this.SetCostume(i);
+                return;
+            }
+        }
+        Debug.LogWarning(this.name + " costume '" + costumeName +"' not found.");
+    }
+
+    /// <summary>
     /// Show this ScratchySprite if it has been hidden
     /// </summary>
     public void Show()
