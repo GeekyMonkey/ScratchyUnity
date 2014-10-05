@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 public class ScratchySprite : ScratchyObject
 {
-
     public Sprite[] Costumes;
+    // public ScratchyCostume[] Costumes;
 
     protected SpriteRenderer spriteRenderer;
 
